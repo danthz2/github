@@ -5,9 +5,9 @@ class Ppdb extends CI_Controller{
         parent::__construct();
         $this->load->model('M_Kewarganegaraan');
         $this->load->model('M_Csiswa');
-        if($this->session->userdata('masuk') == TRUE){
-            redirect('dashboard', 'refresh');
-        }
+        // if($this->session->userdata('masuk') == TRUE){
+           redirect('dashboard', 'refresh');
+        // }
     }
 
     function index(){
