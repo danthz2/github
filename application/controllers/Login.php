@@ -11,6 +11,7 @@ class Login extends CI_Controller{
         $pass = $this->input->post('password', TRUE);
         
         if($email == "adminppdb@alhikmahmp.sch.id"){
+        // if($email == "faqihsidj@gmail.com"){
             $cek = $this->M_Admin->cek_admin($email, $pass);
             if($cek->num_rows() > 0){
                 if($cek->row()->status != "active"){

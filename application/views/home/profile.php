@@ -114,7 +114,7 @@ if ($bg->num_rows() > 0) :
                                             <div class="card" style="width: 15rem;">
                                                 <img class="card-img-top" src="<?= base_url('') ?>assets/img/guru/lina.png" rel="nofollow" alt="Card image cap">
                                                 <div class="card-body">
-                                                    <p class="card-title">Nama : Lina <br> Jabatan : Kepala Sekolah </p>
+                                                    <p class="card-title">Nama : Hj. Herlina, S.Pd <br> Jabatan : Kepala Sekolah </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,7 +122,7 @@ if ($bg->num_rows() > 0) :
                                             <div class="card" style="width: 15rem;">
                                                 <img class="card-img-top" src="<?= base_url('') ?>assets/img/guru/hasunah.png" rel="nofollow" alt="Card image cap">
                                                 <div class="card-body">
-                                                    <p class="card-title">Nama : Hasunah <br> Jabatan : Wakil Kepala Sekolah </p>
+                                                    <p class="card-title">Nama : Hasunah, S.Pd  <br> Jabatan : Wakil Kepala Sekolah </p>
                                                 </div>
                                             </div>
                                         </div>

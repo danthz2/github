@@ -1,21 +1,25 @@
-<?php 
-class Ppdb extends CI_Controller{
+<?php
+class Ppdb extends CI_Controller
+{
 
-    function __construct(){
+    function __construct()
+    {
         parent::__construct();
         $this->load->model('M_Kewarganegaraan');
         $this->load->model('M_Csiswa');
-        // if($this->session->userdata('masuk') == TRUE){
-           redirect('dashboard', 'refresh');
-        // }
+        if ($this->session->userdata('masuk') == TRUE) {
+            redirect('dashboard', 'refresh');
+        }
     }
 
-    function index(){
+    function index()
+    {
         $data['kewarganegaraan'] = $this->M_Kewarganegaraan->get_All()->result();
         $this->load->view('ppdb', $data);
     }
 
-    function regis(){
+    function regis()
+    {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('nik', 'NIK', 'required|numeric', array('required' => '%s Wajib Di Isi'));
         $this->form_validation->set_rules('nama', 'Nama', 'required', array('required' => '%s Wajib Di Isi'));
@@ -36,21 +40,21 @@ class Ppdb extends CI_Controller{
 
         $cek = $this->M_Csiswa->cek_NikEmail($email, $nik);
 
-        if($cek->num_rows() > 0){
-            $error = "Email atau NIK Siswa Sudah Di Daftarkan Sebelumnya, Silahkan Cek <b>".$email."</b> Untuk Melakukan Login.";
-            $this->session->set_flashdata('error',$error);
+        if ($cek->num_rows() > 0) {
+            $error = "Email atau NIK Siswa Sudah Di Daftarkan Sebelumnya, Silahkan Cek <b>" . $email . "</b> Untuk Melakukan Login.";
+            $this->session->set_flashdata('error', $error);
             redirect('ppdb');
-        }else{
-            if ($this->form_validation->run() == FALSE){ 
+        } else {
+            if ($this->form_validation->run() == FALSE) {
                 $error = strip_tags(validation_errors());
                 $this->session->set_flashdata('error', $error);
                 $this->load->view('ppdb');
-            }else{
-                $cek = $this->db->order_by('noujian', "DESC")->get_where('csiswa', ['noujian !='=>NULL]);
-                if($cek->num_rows() > 0){
+            } else {
+                $cek = $this->db->order_by('noujian', "DESC")->get_where('csiswa', ['noujian !=' => NULL]);
+                if ($cek->num_rows() > 0) {
                     $nomor = $cek->row()->noujian;
                     $noujian = $nomor + 1;
-                }else{
+                } else {
                     $noujian = 200001;
                 }
                 $data = [
@@ -64,50 +68,50 @@ class Ppdb extends CI_Controller{
                     'email' => $this->input->post('email', TRUE),
                     'noujian' => $noujian
                 ];
-    
+
                 $this->db->insert('csiswa', $data);
-    
-                if($this->db->affected_rows() > 0){
-    
+
+                if ($this->db->affected_rows() > 0) {
+
                     $var['email'] = $email;
                     $var['password'] = $nik;
                     $var['nama'] = $nama;
                     $var['tl'] = $tl;
                     $var['tgl_lahir'] = $tgl_lahir;
                     $var['jenkel'] = $jenkel;
-                    
+
                     $config = [
                         'mailtype'  => 'html',
                         'charset'   => 'iso-8859-1',
                         'protocol'  => 'smtp',
                         'smtp_host' => 'mail.alhikmahmp.sch.id',
-                        'smtp_user' => 'ppdb@alhikmahmp.sch.id',   
-                        'smtp_pass'   => 's1mpaud3v',   
+                        'smtp_user' => 'ppdb@alhikmahmp.sch.id',
+                        'smtp_pass'   => 's1mpaud3v',
                         'smtp_crypto' => 'ssl',
                         'smtp_port'   => 465,
                     ];
-    
+
                     $this->load->library('email', $config);
                     $this->email->from('ppdb@alhikmahmp.sch.id', 'PPDB Online SDIT Al Hikmah');
                     $this->email->to($email);
                     $this->email->subject('PPDB SDIT Al Hikmah');
                     $isi = $this->load->view('mail', $var, true);
                     $this->email->message($isi);
-    
+
                     if ($this->email->send()) {
-                        $success = "Silahkan Cek Email <b>".$email."</b> Untuk Melakukan Login.";
+                        $success = "Silahkan Cek Email <b>" . $email . "</b> Untuk Melakukan Login.";
                         $this->session->set_flashdata('sukses', $success);
                         redirect('ppdb');
                     } else {
                         $this->db->where('id', $this->db->insert_id());
                         $this->db->delete('csiswa');
-    
-                        $error = "Maaf <b>".$nama."</b> Gagal Registrasi, Silahkan Coba Kembali.";
+
+                        $error = "Maaf <b>" . $nama . "</b> Gagal Registrasi, Silahkan Coba Kembali.";
                         $this->session->set_flashdata('error', $error);
                         redirect('ppdb');
                     }
-                }else{
-                    $error = "Maaf <b>".$nama."</b> Gagal Registrasi, Silahkan Coba Kembali.";
+                } else {
+                    $error = "Maaf <b>" . $nama . "</b> Gagal Registrasi, Silahkan Coba Kembali.";
                     $this->session->set_flashdata('error', $error);
                     redirect('ppdb');
                 }
